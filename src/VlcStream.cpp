@@ -21,7 +21,8 @@ VlcStream::VlcStream(std::string sout, int fps, int width, int height) {
 
 
 	if (sout == ""){
-		sout = "#transcode{vcodec=MJPG, vb=500}:std{access=http{mime=multipart/x-mixed-replace; boundary=--7b3cc56e5f51db803f790dad720ed50a},mux=mpjpeg,dst=:8080/vid.mjpg}";
+		//sout = "#transcode{vcodec=MJPG, vb=500}:std{access=http{mime=multipart/x-mixed-replace; boundary=--7b3cc56e5f51db803f790dad720ed50a},mux=mpjpeg,dst=:8080/vid.mjpg}";
+		sout = "#transcode{vcodec=h264, vb=4096}:std{access=file, mux=mp4, dst=video.mp4}";
 	}
 
 	sprintf(smem_options,"%s",sout.c_str());
