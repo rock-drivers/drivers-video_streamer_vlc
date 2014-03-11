@@ -5,8 +5,8 @@
  *      Author: planthaber
  */
 
-#ifndef VLCCAPTURE_H_
-#define VLCCAPTURE_H_
+#ifndef VLCSTREAM_H_
+#define VLCSTREAM_H_
 
 
 //https://wiki.videolan.org/Stream_to_memory_%28smem%29_tutorial/
@@ -59,6 +59,7 @@ public:
 //	int width,height;
 //
 	cv::Mat imagebuf;
+	cv::Mat pixbuf;
 //	uint8_t* buffer;
 //	unsigned int buffersize;
 //

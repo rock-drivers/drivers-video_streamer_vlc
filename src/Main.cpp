@@ -8,6 +8,10 @@ int main(int argc, char** argv)
 	    if(!cap.isOpened())  // check if we succeeded
 	        return -1;
 
+
+	cap.set(CV_CAP_PROP_FRAME_WIDTH,1920);
+	cap.set(CV_CAP_PROP_FRAME_HEIGHT,1080);
+
 	cv::Mat image;
 
 
@@ -24,7 +28,8 @@ int main(int argc, char** argv)
     int height =  cap.get(CV_CAP_PROP_FRAME_HEIGHT);
     int fps = 30;//cap.get(CV_CAP_PROP_FPS);
 
-    std::string sout = "#transcode{vcodec=MJPG, vb=500}:duplicate{dst=display,dst=std{access=http{mime=multipart/x-mixed-replace; boundary=--7b3cc56e5f51db803f790dad720ed50a},mux=mpjpeg,dst=:8080/vid.mjpg})";
+    //std::string sout = "#transcode{vcodec=MJPG, vb=500}:duplicate{dst=display,dst=std{access=http{mime=multipart/x-mixed-replace; boundary=--7b3cc56e5f51db803f790dad720ed50a},mux=mpjpeg,dst=:8080/vid.mjpg})";
+    std::string sout = "#transcode{vcodec=MJPG, vb=500}:std{access=http{mime=multipart/x-mixed-replace; boundary=--7b3cc56e5f51db803f790dad720ed50a},mux=mpjpeg,dst=:8080/vid.mjpg})";
     VlcStream streamer (sout,fps,width,height);
 
     streamer.write(image);

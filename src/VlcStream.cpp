@@ -12,8 +12,6 @@ VlcStream::VlcStream(std::string sout, int fps, int width, int height) {
 
 	pthread_mutex_init(&imagemutex,NULL);// = PTHREAD_MUTEX_INITIALIZER;
 
-
-
 	sprintf(str_imem_get, "--imem-get=%p", &vlc_imem_get_callback);
 	sprintf(str_imem_release, "--imem-release=%p", &vlc_imem_release_callback);
 	sprintf(str_imem_data, "--imem-data=%p", this);
@@ -58,7 +56,7 @@ VlcStream::VlcStream(std::string sout, int fps, int width, int height) {
 	vlcm = libvlc_media_new_location(vlc, "imem://");
 	vlcmp = libvlc_media_player_new_from_media (vlcm);
 	libvlc_media_release (vlcm);
-
+	start();
 }
 
 
@@ -74,17 +72,6 @@ bool VlcStream::write(cv::Mat& image) {
 
 	image.copyTo(imagebuf);
 
-//	if (image.rows != height || image.cols != width || image.type() != CV_8UC3){
-//		image = cv::Mat(height,width,CV_8UC3);
-//	}
-//
-//	if (imageAvailable){
-//		memcpy(image.data,buffer,buffersize);
-//		imageAvailable = false;
-//		pthread_mutex_unlock(&imagemutex);
-//		return true;
-//	}
-//
 	pthread_mutex_unlock(&imagemutex);
 	return false;
 }
@@ -110,16 +97,19 @@ int vlc_imem_get_callback(void* data, const char* cookie,
 	//lock
 	pthread_mutex_lock(&parent->imagemutex);
 
-
 	//parent->image = image2.clone();
-    *output=parent->imagebuf.data;
+	parent->imagebuf.copyTo(parent->pixbuf);
+
+	pthread_mutex_unlock(&parent->imagemutex);
+
+    *output=parent->pixbuf.data;
 
     if (pts)
         *pts = 4*(1/30.0)*1000;
     if (dts)
         *dts = 4*(1/30.0)*1000;
     //  *size=(size_t)300;
-    *size=(size_t)(parent->imagebuf.rows * parent->imagebuf.cols * 3);
+    *size=(size_t)(parent->pixbuf.rows * parent->pixbuf.cols * 3);
 
 
     return 0;
@@ -134,7 +124,7 @@ void vlc_imem_release_callback(void* data, const char* cookie,
 
 	VlcStream* parent = (VlcStream*)data;
 	//unlock
-	pthread_mutex_unlock(&parent->imagemutex);
+
 	//printf("encode done\n");
 
 }
