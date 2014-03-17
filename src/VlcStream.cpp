@@ -12,9 +12,9 @@ VlcStream::VlcStream(std::string sout, int fps, int width, int height) {
 
 	pthread_mutex_init(&imagemutex,NULL);// = PTHREAD_MUTEX_INITIALIZER;
 
-	sprintf(str_imem_get, "--imem-get=%p", &vlc_imem_get_callback);
-	sprintf(str_imem_release, "--imem-release=%p", &vlc_imem_release_callback);
-	sprintf(str_imem_data, "--imem-data=%p", this);
+	sprintf(str_imem_get, "--imem-get=%lld", (long long int)vlc_imem_get_callback);
+	sprintf(str_imem_release, "--imem-release=%lld", (long long int)vlc_imem_release_callback);
+	sprintf(str_imem_data, "--imem-data=%lld", (long long int)this);
 	sprintf(str_imem_fps, "%i", fps);
 	sprintf(str_imem_width, "%i", width);
 	sprintf(str_imem_height, "%i", height);
