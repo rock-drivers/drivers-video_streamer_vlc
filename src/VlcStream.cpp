@@ -32,7 +32,8 @@ VlcStream::VlcStream(std::string sout, int fps, int width, int height) {
 	const char * const vlc_args[] = {
 	"-I","dummy",
 	        "--ignore-config",
-	        "--network-caching=10",
+	        "--network-caching=100",
+          "--live-caching=100",
 	        "--http-host=localhost",
 	        "--demux","rawvideo",
 	        "--rawvid-fps",str_imem_fps,
@@ -106,9 +107,9 @@ int vlc_imem_get_callback(void* data, const char* cookie,
     *output=parent->pixbuf.data;
 
     if (pts)
-        *pts = 4*(1/30.0)*1000;
+        *pts = 1;//4*(1/30.0)*1000;
     if (dts)
-        *dts = 4*(1/30.0)*1000;
+        *dts = 1;//4*(1/30.0)*1000;
     //  *size=(size_t)300;
     *size=(size_t)(parent->pixbuf.rows * parent->pixbuf.cols * 3);
 
