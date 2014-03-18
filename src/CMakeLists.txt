@@ -1,5 +1,3 @@
-set(CMAKE_BUILD_TYPE Release)
-
 rock_library(video_streamer_vlc
     SOURCES VlcStream.cpp
     HEADERS VlcStream.hpp
