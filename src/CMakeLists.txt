@@ -1,15 +1,15 @@
+
+if(WIN32)
+
 project(video_streamer_vlc)
 set(PROJECT_VERSION 1.0)
 set(PROJECT_DESCRIPTION "small plugin that uses opencv to play movie on a osg texture for mars")
 set(CMAKE_BUILD_TYPE Release)
 
-if(WIN32)
         # this fixes the error 998 from the LibManager
         SET(CMAKE_SHARED_LINKER_FLAGS "-Wl,--enable-auto-import")
         SET(CMAKE_MODULE_LINKER_FLAGS "-Wl,--enable-auto-import")
-else(WIN32)
-set(CMAKE_CXX_FLAGS "-fPIC")
-endif(WIN32)
+
 
 set(SOURCES 
 	VlcStream.cpp
@@ -29,12 +29,10 @@ include_directories(${exec_prefix}/include/)
 
 include(FindPkgConfig)
 
-if(WIN32)
+
   set(LIB_INSTALL_DIR bin) # .dll are in PATH, like executables
   set(WIN_LIBS -lwsock32 -lwinmm -lpthread)
-else(WIN32)
-  set(LIB_INSTALL_DIR lib)
-endif(WIN32)
+
 
 set (TARGET_NAME ${PROJECT_NAME})
 
@@ -62,14 +60,15 @@ install(FILES ${HEADERS} DESTINATION include/${PROJECT_NAME})
 configure_file(${PROJECT_NAME}.pc.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc @ONLY)
 install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc DESTINATION lib/pkgconfig)
 
+else(WIN32)
 
+rock_library(video_streamer_vlc
+    SOURCES VlcStream.cpp
+    HEADERS VlcStream.hpp
+    DEPS_PKGCONFIG opencv
+    LIBS vlc)
 
+rock_executable(video_streamer_vlc_bin Main.cpp
+    DEPS video_streamer_vlc)
 
-#rock_library(video_streamer_vlc
-#    SOURCES VlcStream.cpp
-#    HEADERS VlcStream.hpp
-#    DEPS_PKGCONFIG opencv
-#    LIBS vlc)
-
-#rock_executable(video_streamer_vlc_bin Main.cpp
-#    DEPS video_streamer_vlc)
+endif(WIN32)
