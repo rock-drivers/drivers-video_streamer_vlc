@@ -102,8 +102,6 @@ int vlc_imem_get_callback(void* data, const char* cookie,
 	//parent->image = image2.clone();
 	parent->imagebuf.copyTo(parent->pixbuf);
 
-	pthread_mutex_unlock(&parent->imagemutex);
-
     *output=parent->pixbuf.data;
 
     if (pts)
@@ -113,7 +111,7 @@ int vlc_imem_get_callback(void* data, const char* cookie,
     //  *size=(size_t)300;
     *size=(size_t)(parent->pixbuf.rows * parent->pixbuf.cols * 3);
 
-
+    pthread_mutex_unlock(&parent->imagemutex);
     return 0;
 
 }
