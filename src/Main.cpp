@@ -1,6 +1,11 @@
 #include <iostream>
 #include <video_streamer_vlc/VlcStream.hpp>
 
+
+/**
+ * Open a FullHD webcam and streams as motion jpg to http://localhost:8080/vid.mjpg (can be opened by browser)
+ */
+
 int main(int argc, char** argv)
 {
 
@@ -32,10 +37,10 @@ int main(int argc, char** argv)
     //std::string sout = "#transcode{vcodec=MJPG, vb=500}:duplicate{dst=display,dst=std{access=http{mime=multipart/x-mixed-replace; boundary=--7b3cc56e5f51db803f790dad720ed50a},mux=mpjpeg,dst=:8080/vid.mjpg})";
 
     //provide as mjpg stream
-    //std::string sout = "#transcode{vcodec=MJPG, vb=500}:std{access=http{mime=multipart/x-mixed-replace; boundary=--7b3cc56e5f51db803f790dad720ed50a},mux=mpjpeg,dst=:8080/vid.mjpg})";
+    std::string sout = "#transcode{vcodec=MJPG, vb=500}:std{access=http{mime=multipart/x-mixed-replace; boundary=--7b3cc56e5f51db803f790dad720ed50a},mux=mpjpeg,dst=:8080/vid.mjpg})";
 
     //save to file using a mp4 container and the h264 codec with a bitrate og 4096 kbps
-    std::string sout = "#transcode{vcodec=h264, vb=4096}:std{access=file, mux=mp4, dst=video.mp4}";
+    //std::string sout = "#transcode{vcodec=h264, vb=4096}:std{access=file, mux=mp4, dst=video.mp4}";
 
 
     VlcStream streamer (sout,fps,width,height);

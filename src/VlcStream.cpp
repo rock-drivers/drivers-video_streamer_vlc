@@ -27,30 +27,28 @@ VlcStream::VlcStream(std::string sout, int fps, int width, int height) {
 
 	sprintf(smem_options,"%s",sout.c_str());
 
-
-
 	const char * const vlc_args[] = {
-	"-I","dummy",
-	        "--ignore-config",
-	        "--network-caching=100",
-          "--live-caching=100",
-	        "--http-host=localhost",
-	        "--demux","rawvideo",
-	        "--rawvid-fps",str_imem_fps,
-	        "--rawvid-width",str_imem_width,
-	        "--rawvid-height",str_imem_height,
-	        "--rawvid-chroma","RV24",
+			"-I","dummy",
+			"--ignore-config",
+			"--network-caching=100",
+			"--live-caching=100",
+			"--http-host=localhost",
+			"--demux","rawvideo",
+			"--rawvid-fps",str_imem_fps,
+			"--rawvid-width",str_imem_width,
+			"--rawvid-height",str_imem_height,
+			"--rawvid-chroma","RV24",
 
-	        "--imem-channels=1",
-	        "--imem-cat=4",
-	        "--imem-fps",str_imem_fps,
-	        "--imem-codec=none",
+			"--imem-channels=1",
+			"--imem-cat=4",
+			"--imem-fps",str_imem_fps,
+			"--imem-codec=none",
 
-	        str_imem_get,
-	        str_imem_release,
-	        str_imem_data,
+			str_imem_get,
+			str_imem_release,
+			str_imem_data,
 
-	        "--sout",smem_options
+			"--sout",smem_options
 	};
 
 
@@ -65,12 +63,10 @@ VlcStream::VlcStream(std::string sout, int fps, int width, int height) {
 VlcStream::~VlcStream() {
 	libvlc_media_player_release (vlcmp);
 	libvlc_release (vlc);
-	//free(buffer);
 }
 
 bool VlcStream::write(cv::Mat& image) {
 	pthread_mutex_lock(&imagemutex);
-	//imagebuf.copyTo(image);
 
 	image.copyTo(imagebuf);
 
@@ -93,13 +89,11 @@ int vlc_imem_get_callback(void* data, const char* cookie,
 		int64_t* dts, int64_t* pts, unsigned * flags, size_t* size,
 		void** output){
 
-	//printf("encode\n");
-	VlcStream* parent = (VlcStream*)data;
 
+	VlcStream* parent = (VlcStream*)data;
 	//lock
 	pthread_mutex_lock(&parent->imagemutex);
 
-	//parent->image = image2.clone();
 	parent->imagebuf.copyTo(parent->pixbuf);
 
     *output=parent->pixbuf.data;
@@ -111,7 +105,6 @@ int vlc_imem_get_callback(void* data, const char* cookie,
     //  *size=(size_t)300;
     *size=(size_t)(parent->pixbuf.rows * parent->pixbuf.cols * 3);
 
-    pthread_mutex_unlock(&parent->imagemutex);
     return 0;
 
 }
@@ -122,9 +115,9 @@ int vlc_imem_get_callback(void* data, const char* cookie,
 void vlc_imem_release_callback(void* data, const char* cookie,
 		size_t size, void* unknown){
 
-	VlcStream* parent = (VlcStream*)data;
 	//unlock
+	VlcStream* parent = (VlcStream*)data;
+	pthread_mutex_unlock(&parent->imagemutex);
 
-	//printf("encode done\n");
 
 }

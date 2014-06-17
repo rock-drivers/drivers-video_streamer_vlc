@@ -37,33 +37,43 @@ void vlc_imem_release_callback(void* data, const char* cookie,
 
 class VlcStream {
 public:
+
+	/**
+	 * Constructor of the streamer class
+	 * @param sout sout string as defined for vlc, see following links for documentation:
+	 * https://wiki.videolan.org/Transcode/
+	 * http://www.videolan.org/doc/vlc-user-guide/en/ch04.html
+	 * http://www.videolan.org/doc/videolan-howto/en/ch09.html
+	 * http://www.videolan.org/doc/streaming-howto/en/ch04.html
+	 * @param fps frames per second of the input from opencv
+	 * @param width width of the input in pixels
+	 * @param height height of the input in pixels
+	 */
+
 	VlcStream(std::string sout, int fps, int width, int height);
 	virtual ~VlcStream();
 
-
-	//void open();
-
-	//bool grab();
-
-	//bool retrieve();
-
+	/**
+	 * write the next image to the stream
+	 */
 	bool write(cv::Mat &image);
 
+	/**
+	 * start streaming thread (vlc instance "play")
+	 * automatically called by the constructor
+	 */
 	void start();
 
+	/**
+	 * stop streaming  (vlc instance "stop")
+	 */
 	void stop();
 
 
 	pthread_mutex_t imagemutex;
 
-//	int width,height;
-//
 	cv::Mat imagebuf;
 	cv::Mat pixbuf;
-//	uint8_t* buffer;
-//	unsigned int buffersize;
-//
-//	bool imageAvailable;
 
 private:
 
