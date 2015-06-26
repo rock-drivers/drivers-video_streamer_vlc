@@ -56,7 +56,7 @@ public:
 	/**
 	 * write the next image to the stream
 	 */
-	bool write(cv::Mat &image);
+	bool write(cv::Mat &image, int64_t timestamp = 1);
 
 	/**
 	 * start streaming thread (vlc instance "play")
@@ -74,6 +74,7 @@ public:
 
 	cv::Mat imagebuf;
 	cv::Mat pixbuf;
+	int64_t timestamp;
 
 private:
 

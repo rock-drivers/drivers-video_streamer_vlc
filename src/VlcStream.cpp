@@ -65,10 +65,11 @@ VlcStream::~VlcStream() {
 	libvlc_release (vlc);
 }
 
-bool VlcStream::write(cv::Mat& image) {
+bool VlcStream::write(cv::Mat& image, int64_t ts) {
 	pthread_mutex_lock(&imagemutex);
 
 	image.copyTo(imagebuf);
+	timestamp = ts; 
 
 	pthread_mutex_unlock(&imagemutex);
 	return false;
@@ -89,20 +90,18 @@ int vlc_imem_get_callback(void* data, const char* cookie,
 		int64_t* dts, int64_t* pts, unsigned * flags, size_t* size,
 		void** output){
 
+    VlcStream* parent = (VlcStream*)data;
+    //lock
+    pthread_mutex_lock(&parent->imagemutex);
 
-	VlcStream* parent = (VlcStream*)data;
-	//lock
-	pthread_mutex_lock(&parent->imagemutex);
-
-	parent->imagebuf.copyTo(parent->pixbuf);
+    parent->imagebuf.copyTo(parent->pixbuf);
 
     *output=parent->pixbuf.data;
 
     if (pts)
-        *pts = 1;//4*(1/30.0)*1000;
+	*pts = parent->timestamp;
     if (dts)
-        *dts = 1;//4*(1/30.0)*1000;
-    //  *size=(size_t)300;
+	*dts = parent->timestamp;
     *size=(size_t)(parent->pixbuf.rows * parent->pixbuf.cols * 3);
 
     return 0;
