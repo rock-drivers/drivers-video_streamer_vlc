@@ -84,11 +84,9 @@ private:
     //callback pointer addess string
     char str_imem_get[100], str_imem_release[100],str_imem_data[100],str_imem_fps[100],str_imem_width[100],str_imem_height[100];
 
-
     libvlc_instance_t *vlc;
     libvlc_media_player_t *vlcmp;
     libvlc_media_t *vlcm;
-
 };
 
 #endif /* VLCTOMEMORY_H_ */
