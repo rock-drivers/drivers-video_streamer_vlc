@@ -14,8 +14,8 @@ int main(int argc, char** argv)
 	        return -1;
 
 
-	cap.set(CV_CAP_PROP_FRAME_WIDTH,1920);
-	cap.set(CV_CAP_PROP_FRAME_HEIGHT,1080);
+	cap.set(cv::CAP_PROP_FRAME_WIDTH,1920);
+	cap.set(cv::CAP_PROP_FRAME_HEIGHT,1080);
 
 	cv::Mat image;
 
@@ -29,8 +29,8 @@ int main(int argc, char** argv)
 		if(cv::waitKey(30) >= 0) break;
     }
 
-    int width = cap.get(CV_CAP_PROP_FRAME_WIDTH);
-    int height =  cap.get(CV_CAP_PROP_FRAME_HEIGHT);
+    int width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
+    int height =  cap.get(cv::CAP_PROP_FRAME_HEIGHT);
     int fps = 30;//cap.get(CV_CAP_PROP_FPS);
 
     //provide as mjpg stream and display locally
