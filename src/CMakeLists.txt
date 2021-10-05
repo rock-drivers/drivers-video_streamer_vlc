@@ -65,7 +65,7 @@ else(WIN32)
 rock_library(video_streamer_vlc
     SOURCES VlcStream.cpp
     HEADERS VlcStream.hpp
-    DEPS_PKGCONFIG opencv
+    DEPS_CMAKE OpenCV
     LIBS vlc)
 
 rock_executable(video_streamer_vlc_bin Main.cpp
